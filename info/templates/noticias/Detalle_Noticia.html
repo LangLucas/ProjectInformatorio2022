@@ -1,0 +1,71 @@
+{%extends 'base.html'%}
+{%load static %}
+
+{%block contenido%}
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="card mb-3" style="width: 100%;">
+            <div class="d-flex justify-content-center">
+                <img src="{{object.imagen.url}}" class="card-img-top" alt="..." style="max-height:500px; ">
+            </div>
+            <div class="card-body">
+            <h2 class="card-title">{{object}}</h2>
+            <p class="card-text">{{object.cuerpo}}.</p>
+            <p class="card-text"><small class="text-muted">Creado el: {{object.creado}}</small></p>
+            <p class="card-text"><small class="text-muted">Autor: {{object.autor}} <br> Categoria:{{object.categoria}}</small></p>
+            </div>
+        </div>  
+    </div>
+    <h3>Deja un comentario</h3>
+    <hr>
+
+    <br>
+    
+   
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true" style="background-color: rgb(61, 157, 170);">Comentarios</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" style="background-color: rgb(61, 157, 170); ">Comentar</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0"> 
+            {% for x in object.obtener_mis_comentarios %}
+            <div class="card border-secondary mb-3" style="max-width: 50rem;">
+                <div class="card-header" style="display: flex; justify-content:space-between;">
+                        <label>Usuario: {{x.usuario}} </label> 
+                        <a style="font-size:10
+                        px ;" href="{% url 'noticias:eliminar_comentario' x.pk %}" class="btn-close" ></a>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{x.texto}}</p>
+                    <p class="card-text"><small class="text-muted">{{x.creado}}</small></p>
+                </div>
+                    
+            </div>
+        {% endfor %}
+        </div>
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">    {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'noticias:agregar_comentario' object.pk %}" >{% csrf_token %}
+                <div class="mb-1">
+                    <label for="exampleFormControlInput1" class="form-label" style="font-size: 18px;">Usuario: {{user.username}}</label>
+                  </div>
+                  <div class="mb-3">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="coment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-outline-info">COMENTAR</button>
+            </form>
+        {% endif %}
+        </div>
+    </div>
+      
+
+
+    
+</div>
+
+
+{%endblock contenido%}
